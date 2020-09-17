@@ -17,9 +17,19 @@ def profile(func):
     """A cProfile decorator function that can be used to
     measure performance.
     """
+    def wrapper(*args, **kwargs):
+        pr = cProfile.Profile()
+        pr.enable()
+        result = func(*args, **kwargs)
+        pr.disable()
+        sortby = 'cumulative'
+        ps = pstats.Stats(pr).sort_stats(sortby)
+        ps.print_stats()
+        return result
+    return wrapper
     # Be sure to review the lesson material on decorators.
     # You need to understand how they are constructed and used.
-    raise NotImplementedError("Complete this decorator function")
+    # raise NotImplementedError("Complete this decorator function")
 
 
 def read_movies(src):
@@ -36,7 +46,22 @@ def is_duplicate(title, movies):
             return True
     return False
 
+# Original Function
+# @profile
+# def find_duplicate_movies(src):
+#     """Returns a list of duplicate movies from a src list."""
+#     movies = read_movies(src)
+#     duplicates = []
+#     while movies:
+#         movie = movies.pop()
+#         if is_duplicate(movie, movies):
+#             duplicates.append(movie)
+#     return duplicates
 
+# Function Refactored
+
+
+@profile
 def find_duplicate_movies(src):
     """Returns a list of duplicate movies from a src list."""
     movies = read_movies(src)
