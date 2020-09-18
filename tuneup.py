@@ -47,6 +47,8 @@ def is_duplicate(title, movies):
     return False
 
 # Original Function
+
+# 3 seconds
 # @profile
 # def find_duplicate_movies(src):
 #     """Returns a list of duplicate movies from a src list."""
@@ -61,16 +63,28 @@ def is_duplicate(title, movies):
 # Function Refactored
 
 
-@profile
+# .08 seconds
+# @profile
 def find_duplicate_movies(src):
-    """Returns a list of duplicate movies from a src list."""
-    movies = read_movies(src)
-    duplicates = []
-    while movies:
-        movie = movies.pop()
-        if is_duplicate(movie, movies):
-            duplicates.append(movie)
-    return duplicates
+    # """Returns a list of duplicate movies from a src list."""
+    movies = [movie.lower() for movie in read_movies(src)]
+    movies.sort()
+    # Using zip to find duplicates
+    #   [a,b,c,c,e]
+    #   [1:] = [b,c,c,e]
+    #   [:-1] = [d,c,c,a]
+    not_duplicate = [x for x, y in zip(movies[1:], movies[:-1]) if x == y]
+    # not_duplicate = [x for x in movies if movies.count(x) > 1]
+    return not_duplicate
+
+
+# What can I do to make the function perform faster?
+#   Which lines can I combine to make one line
+#   For loop instead of while loop?
+
+# duplicates = [movie = movies.pop() for x in range(movies)]
+# duplicates = []
+# return list(if movies)
 
 
 def timeit_helper():
